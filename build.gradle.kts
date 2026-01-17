@@ -7,6 +7,7 @@ group = "com.example"
 version = "0.1.0"
 val javaVersion = 25
 
+val home = System.getenv("HOME")
 val os = System.getProperty("os.name").lowercase()
 
 val appData = when {
@@ -14,11 +15,18 @@ val appData = when {
         System.getenv("APPDATA")
 
     os.contains("mac") || os.contains("darwin") ->
-        "${System.getenv("HOME")}/Library/Application Support"
+        "$home/Library/Application Support"
 
-    os.contains("linux") ->
-        System.getenv("XDG_DATA_HOME")
-            ?: "${System.getenv("HOME")}/.local/share"
+    os.contains("linux") -> {
+        val flatpakPath = "$home/.var/app/com.hypixel.HytaleLauncher/data"
+        when {
+            File(flatpakPath).exists() -> flatpakPath
+            System.getenv("XDG_DATA_HOME") != null ->
+                System.getenv("XDG_DATA_HOME")
+            else ->
+                "$home/.local/share"
+        }
+    }
 
     else -> error("Unsupported OS")
 }
