@@ -85,7 +85,7 @@ tasks.named<ProcessResources>("processResources") {
 }
 
 hytale {
-
+    gameDir = "$appData/Hytale"
 }
 
 tasks.withType<Jar> {
